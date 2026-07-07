@@ -15,16 +15,39 @@ export class ApiError extends Error {
   }
 }
 
-export async function verifyNIN(initData: string, nin: string): Promise<VerifyNINResponse> {
-  const res = await fetch(`${BASE}/kyc/bot/verify-nin`, {
+async function parseJson(res: Response) {
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
+}
+
+export async function startSignup(
+  firstName: string,
+  lastName: string,
+  email: string
+): Promise<{ token: string }> {
+  const res = await fetch(`${BASE}/verify/start`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ initData, nin }),
+    body: JSON.stringify({ firstName, lastName, email }),
   });
 
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : {};
+  const data = await parseJson(res);
+  if (!res.ok) {
+    // StartWebSignup returns errors under "message" (matches the rest of
+    // userAuthentication/*.go), not "error" (the kyc package's convention).
+    throw new ApiError(data.message || `Request failed (${res.status})`);
+  }
+  return data as { token: string };
+}
 
+export async function verifyNIN(token: string, nin: string): Promise<VerifyNINResponse> {
+  const res = await fetch(`${BASE}/verify/nin`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, nin }),
+  });
+
+  const data = await parseJson(res);
   if (!res.ok) {
     throw new ApiError(data.error || `Request failed (${res.status})`, data.result_code);
   }
@@ -34,7 +57,7 @@ export async function verifyNIN(initData: string, nin: string): Promise<VerifyNI
 // Mirrors the friendlier-message mapping already used in Linq-v2-Frontend's
 // Verification.tsx, so the two verification surfaces read consistently.
 export function friendlyErrorMessage(err: unknown): string {
-  const raw = err instanceof Error ? err.message : 'Failed to verify NIN. Please try again.';
+  const raw = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
   const lower = raw.toLowerCase();
   if (lower.includes('id authority') || lower.includes('authority is currently unavailable')) {
     return 'Verification is temporarily unavailable. Please try again later.';

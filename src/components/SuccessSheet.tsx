@@ -1,9 +1,5 @@
 import { CheckIcon } from '../icons';
-
-// No browser equivalent of Telegram.WebApp.close() for a plain tab — deep-link
-// back into the bot chat instead (opens the Telegram app on mobile, Telegram
-// Desktop/web.telegram.org on desktop).
-const BOT_DEEP_LINK = 'https://t.me/LInqTelegramBot';
+import { BOT_DEEP_LINK } from '../constants';
 
 export default function SuccessSheet() {
   return (

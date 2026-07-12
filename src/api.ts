@@ -40,6 +40,34 @@ export async function startSignup(
   return data as { token: string };
 }
 
+export async function startNINUpgrade(email: string): Promise<{ message: string }> {
+  const res = await fetch(`${BASE}/verify/upgrade/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await parseJson(res);
+  if (!res.ok) {
+    throw new ApiError(data.message || `Request failed (${res.status})`);
+  }
+  return data as { message: string };
+}
+
+export async function confirmNINUpgrade(email: string, otp: string): Promise<{ token: string }> {
+  const res = await fetch(`${BASE}/verify/upgrade/confirm`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, otp }),
+  });
+
+  const data = await parseJson(res);
+  if (!res.ok) {
+    throw new ApiError(data.message || `Request failed (${res.status})`);
+  }
+  return data as { token: string };
+}
+
 export async function verifyNIN(token: string, nin: string): Promise<VerifyNINResponse> {
   const res = await fetch(`${BASE}/verify/nin`, {
     method: 'POST',

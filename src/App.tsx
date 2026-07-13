@@ -19,13 +19,14 @@ export default function App() {
     <div className="page">
       {step === 'profile' && (
         <ProfileStep
-          onDone={() => {
+          onDone={(t) => {
+            setToken(t);
             setStep('signupDone');
           }}
         />
       )}
 
-      {step === 'signupDone' && <TiersExplainerStep />}
+      {step === 'signupDone' && <TiersExplainerStep onVerifyNow={() => setStep('nin')} />}
 
       {step === 'upgradeEmail' && (
         <UpgradeEmailStep
@@ -50,7 +51,7 @@ export default function App() {
       {(step === 'nin' || step === 'done') && (
         <NinStep
           token={token}
-          onBack={() => setStep(isUpgradeMode ? 'upgradeEmail' : 'profile')}
+          onBack={() => setStep(isUpgradeMode ? 'upgradeEmail' : 'signupDone')}
           onVerified={() => setStep('done')}
         />
       )}

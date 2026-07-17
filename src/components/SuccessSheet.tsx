@@ -9,14 +9,15 @@ export default function SuccessSheet() {
           <CheckIcon />
         </div>
         <h2 className="headline" style={{ fontSize: '20px' }}>
-          KYC completed
+          You're verified
         </h2>
         <p className="subtitle" style={{ marginBottom: '24px' }}>
-          Your KYC has been completed successfully. Head back to Telegram and enter this email to finish linking
-          your account.
+          One last step to finish. Head back to the Telegram bot, tap{' '}
+          <strong>"I've signed up — link my account"</strong>, and enter this same email to link it and unlock
+          your full daily limit.
         </p>
         <a className="btn" href={BOT_DEEP_LINK} style={{ textDecoration: 'none' }}>
-          Done
+          Back to Telegram
         </a>
       </div>
     </div>

@@ -49,8 +49,8 @@ export default function ProfileStep({ onDone }: Props) {
       <div className="content">
         <h1 className="headline">Tell us about yourself</h1>
         <p className="subtitle">
-          Already have a Linq account? Open the bot and tap <em>"I've signed up, verify me"</em> to link it —
-          no need to sign up again.
+          Already have a Linq account? Open the bot and tap <em>"I've signed up — link my account"</em> to link
+          it — no need to sign up again.
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -102,8 +102,8 @@ export default function ProfileStep({ onDone }: Props) {
 
           {alreadyVerified && (
             <div className="error-banner">
-              An account with this email is already verified. Open the Linq bot and tap "I've signed up, verify
-              me" to link it.
+              An account with this email is already verified. Open the Linq bot and tap "I've signed up — link
+              my account" to link it.
             </div>
           )}
           {error && <div className="error-banner">{error}</div>}

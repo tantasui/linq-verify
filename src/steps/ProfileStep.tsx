@@ -4,7 +4,7 @@ import { startSignup, ApiError, friendlyErrorMessage } from '../api';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface Props {
-  onDone: (token: string) => void;
+  onDone: (token: string, botLinkToken?: string) => void;
 }
 
 export default function ProfileStep({ onDone }: Props) {
@@ -25,7 +25,7 @@ export default function ProfileStep({ onDone }: Props) {
     setAlreadyVerified(false);
     try {
       const res = await startSignup(firstName.trim(), lastName.trim(), email.trim());
-      onDone(res.token);
+      onDone(res.token, res.botLinkToken);
     } catch (err) {
       if (err instanceof ApiError && err.message.toLowerCase().includes('already exists and is verified')) {
         setAlreadyVerified(true);

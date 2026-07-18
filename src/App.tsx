@@ -13,20 +13,26 @@ const isUpgradeMode = new URLSearchParams(window.location.search).get('mode') ==
 export default function App() {
   const [step, setStep] = useState<Step>(isUpgradeMode ? 'upgradeEmail' : 'profile');
   const [token, setToken] = useState('');
+  // The bot-link token, minted at signup, that turns the "back to Telegram" links
+  // into one-tap auto-link deep links. Absent in the upgrade flow (already linked).
+  const [botLinkToken, setBotLinkToken] = useState<string | undefined>(undefined);
   const [upgradeEmail, setUpgradeEmail] = useState('');
 
   return (
     <div className="page">
       {step === 'profile' && (
         <ProfileStep
-          onDone={(t) => {
+          onDone={(t, blt) => {
             setToken(t);
+            setBotLinkToken(blt);
             setStep('signupDone');
           }}
         />
       )}
 
-      {step === 'signupDone' && <TiersExplainerStep onVerifyNow={() => setStep('nin')} />}
+      {step === 'signupDone' && (
+        <TiersExplainerStep botLinkToken={botLinkToken} onVerifyNow={() => setStep('nin')} />
+      )}
 
       {step === 'upgradeEmail' && (
         <UpgradeEmailStep
@@ -56,7 +62,7 @@ export default function App() {
         />
       )}
 
-      {step === 'done' && <SuccessSheet />}
+      {step === 'done' && <SuccessSheet botLinkToken={botLinkToken} />}
     </div>
   );
 }

@@ -1,11 +1,12 @@
 import { ShieldIcon } from '../icons';
-import { BOT_DEEP_LINK } from '../constants';
+import { botLink } from '../constants';
 
 interface Props {
+  botLinkToken?: string;
   onVerifyNow: () => void;
 }
 
-export default function TiersExplainerStep({ onVerifyNow }: Props) {
+export default function TiersExplainerStep({ botLinkToken, onVerifyNow }: Props) {
   return (
     <div className="screen">
       <div className="content">
@@ -25,7 +26,7 @@ export default function TiersExplainerStep({ onVerifyNow }: Props) {
           <p className="subtitle" style={{ fontSize: '12px', margin: '10px 0 20px' }}>
             Takes under a minute — unlocks the full ₦5,000,000/day limit immediately.
           </p>
-          <a className="btn btn-secondary" href={BOT_DEEP_LINK} style={{ textDecoration: 'none' }}>
+          <a className="btn btn-secondary" href={botLink(botLinkToken)} style={{ textDecoration: 'none' }}>
             Skip for now, I'll verify later
           </a>
         </div>

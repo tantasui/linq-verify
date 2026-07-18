@@ -24,7 +24,7 @@ export async function startSignup(
   firstName: string,
   lastName: string,
   email: string
-): Promise<{ token: string }> {
+): Promise<{ token: string; botLinkToken?: string }> {
   const res = await fetch(`${BASE}/verify/start`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -37,7 +37,9 @@ export async function startSignup(
     // userAuthentication/*.go), not "error" (the kyc package's convention).
     throw new ApiError(data.message || `Request failed (${res.status})`);
   }
-  return data as { token: string };
+  // botLinkToken powers the one-tap t.me/<bot>?start=link_<token> deep link that
+  // finishes linking without re-entering email + an OTP.
+  return data as { token: string; botLinkToken?: string };
 }
 
 export async function startNINUpgrade(email: string): Promise<{ message: string }> {

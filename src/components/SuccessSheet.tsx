@@ -1,7 +1,15 @@
 import { CheckIcon } from '../icons';
-import { BOT_DEEP_LINK } from '../constants';
+import { botLink } from '../constants';
 
-export default function SuccessSheet() {
+interface Props {
+  botLinkToken?: string;
+}
+
+export default function SuccessSheet({ botLinkToken }: Props) {
+  // With a token, the button links the account automatically on tap — no email or
+  // code to re-enter. Without one (the upgrade flow, already linked), it just
+  // reopens the bot, so the copy stays generic.
+  const hasAutoLink = !!botLinkToken;
   return (
     <div className="sheet-overlay">
       <div className="sheet">
@@ -12,12 +20,12 @@ export default function SuccessSheet() {
           You're verified
         </h2>
         <p className="subtitle" style={{ marginBottom: '24px' }}>
-          One last step to finish. Head back to the Telegram bot, tap{' '}
-          <strong>"I've signed up — link my account"</strong>, and enter this same email to link it and unlock
-          your full daily limit.
+          {hasAutoLink
+            ? 'Tap below to open Telegram — your account links automatically and your full daily limit unlocks. No code to enter.'
+            : "You're all set. Tap below to head back to Telegram."}
         </p>
-        <a className="btn" href={BOT_DEEP_LINK} style={{ textDecoration: 'none' }}>
-          Back to Telegram
+        <a className="btn" href={botLink(botLinkToken)} style={{ textDecoration: 'none' }}>
+          {hasAutoLink ? 'Finish in Telegram' : 'Back to Telegram'}
         </a>
       </div>
     </div>
